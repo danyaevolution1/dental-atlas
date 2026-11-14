@@ -8,13 +8,13 @@ My goal is to create an interactive educational platform where users can explore
 
 ## ✨ Features
 
-- **3D Tooth Models** — Explore the anatomy of human teeth.
-- **32 Teeth** — Navigate through the full set of permanent teeth using the FDI numbering system.
-- **Anatomical Layers** — Explore enamel, dentin, pulp, root canals, cementum, periodontal ligament, bone, nerves, and blood vessels.
-- **Interactive Views** — Rotate models and switch between different viewing angles.
-- **Internal Structures** — Explore internal tooth anatomy using section and cutaway modes.
-- **Dental Pathologies** — Learn about common dental conditions.
-- **Orthodontics Simulation** — Explore basic orthodontic concepts.
+- **3D Tooth Models**-Explore the anatomy of human teeth.
+- **32 Teeth**-Navigate through the full set of permanent teeth using the FDI numbering system.
+- **Anatomical Layers**- Explore enamel, dentin, pulp, root canals, cementum, periodontal ligament, bone, nerves, and blood vessels.
+- **Interactive Views**- Rotate models and switch between different viewing angles.
+- **Internal Structures**- Explore internal tooth anatomy using section and cutaway modes.
+- **Dental Pathologies**-Learn about common dental conditions.
+- **Orthodontics Simulation**-Explore basic orthodontic concepts.
 
 ## 🛠️ Technologies
 
@@ -33,12 +33,4 @@ This project is still under development. I'm continuously learning, fixing bugs,
 
 Some content, including doctor information and appointment functionality, is currently for demonstration purposes only.
 
-## 🤝 Contributions & Feedback
 
-I'm a beginner in programming, and I'm always open to feedback, suggestions, and contributions.
-
-If you notice a bug, have an idea, or want to help improve the project, feel free to open an issue or contact me.
-
-I'm also happy to meet other developers and talk about programming, web development, and technology.
-
-**Thanks for checking out Dental Atlas!**
