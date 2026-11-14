@@ -50,7 +50,6 @@ input,select{min-height:44px;padding:8px 10px;border:1px solid var(--ln);backgro
 .sc{display:flex;flex-direction:column;gap:8px;text-decoration:none;color:var(--tx);background:var(--sf);border:1px solid var(--ln);border-top:4px solid var(--cc);border-radius:16px;padding:20px;transition:box-shadow .25s,transform .25s}.sc:hover{box-shadow:0 10px 28px rgba(21,38,45,.12);transform:translateY(-3px)}.sc h3{margin:0;font-size:18px}.sc p{margin:0;color:var(--t2);font-size:14px}.sc em{font:700 12px "Manrope",system-ui,sans-serif;font-style:normal;color:var(--cc);letter-spacing:.07em;margin-top:auto;padding-top:6px}
 .tg{display:inline-block;font:600 11px "Manrope",system-ui,sans-serif;padding:4px 9px;border-radius:999px;background:var(--bg);border:1px solid var(--ln);color:var(--t2);margin:0 4px 4px 0}
 #tip{white-space:nowrap}
-#sl{position:absolute;pointer-events:none;display:none;background:var(--ac);color:#fff;font:700 12px "Manrope",system-ui,sans-serif;padding:6px 12px;border-radius:999px;white-space:nowrap;box-shadow:0 4px 14px rgba(21,38,45,.28)}
 .pfl{display:grid;grid-template-columns:auto 1fr;gap:5px 14px;font-size:13px;margin:10px 0}.pfl dt{color:var(--t2)}.pfl dd{margin:0;font-weight:600}
 .pl{display:block;color:var(--t2);font-size:11px;letter-spacing:.06em;margin:8px 0 4px}a.lk{color:var(--ac);text-decoration:none;cursor:pointer}a.lk:hover,button.lk:hover{background:var(--ac);color:#fff}button.tg{cursor:pointer}#bc{background:var(--c-or);color:#fff;border-color:var(--c-or)}#pcat{background:var(--c-pa);color:#fff;border-color:var(--c-pa)}#ptx details{padding:8px 14px;margin-bottom:6px;border-radius:12px}#ptx summary{font-size:14px}#ptx p{margin:6px 0;font-size:14px}.oc h3{margin:8px 0 4px;font-size:18px}
 svg.ce{width:100%;height:auto;max-width:520px;display:block;margin:auto}.lm{cursor:pointer}.lm:focus-visible{outline:2px solid var(--ac)}
@@ -62,7 +61,7 @@ svg.ce{width:100%;height:auto;max-width:520px;display:block;margin:auto}.lm{curs
 <nav id="nav"><a href="#atlas">Атлас зубов</a><a href="#services">Услуги</a><a href="#pathology">Патологии</a><a href="#ortho">Ортодонтия</a><a href="#doctors">Врачи</a><a href="#contact">Контакты</a><a href="#appointment">Запись</a></nav></header>
 <main id="v"></main>
 <div id="store" hidden>
-<div id="stage"><canvas id="c" aria-label="Интерактивная 3D-модель зубного ряда"></canvas><div id="tip"></div><div id="sl"></div><div id="nogl">Ваше устройство не поддерживает WebGL. Откройте сайт в другом браузере, чтобы увидеть 3D-модель. Ниже доступна текстовая информация о зубах.</div></div>
+<div id="stage"><canvas id="c" aria-label="Интерактивная 3D-модель зубного ряда"></canvas><div id="tip"></div><div id="nogl">Ваше устройство не поддерживает WebGL. Откройте сайт в другом браузере, чтобы увидеть 3D-модель. Ниже доступна текстовая информация о зубах.</div></div>
 <aside id="panel">
 <div class="bar" id="jaws"></div><div class="bar" id="views"></div><div class="bar" id="modes"></div>
 <h3 id="pt">Выберите зуб</h3><div id="ps" style="color:var(--t2);font-size:14px"></div><div id="pf"></div>
@@ -94,14 +93,14 @@ const mat=(c,o={})=>new THREE.MeshStandardMaterial(Object.assign({color:c,roughn
 const M={enamel:new THREE.MeshPhysicalMaterial({color:0xf4e0b8,roughness:.26,clearcoat:.7,clearcoatRoughness:.22,envMapIntensity:1.25,side:THREE.DoubleSide,clippingPlanes:[CP]}),dentin:mat(0xe3ab55),pulp:mat(0xe0304f),canal:mat(0xc23b4c),cem:mat(0xc9a468),pdl:mat(0xd8736a,{transparent:true,opacity:.8,depthWrite:false}),bone:mat(0xdcbd8a,{transparent:true,opacity:.42,depthWrite:false}),nerve:mat(0xf2b01e,{emissive:0x6b4a00}),art:mat(0xe03131,{emissive:0x5a0f0f}),vein:mat(0x2f6fd0,{emissive:0x0f2a5a})};
 function build(f){const q=f/10|0,p=f%10,[j,sd]=Q[q],k=ty(p),D=TY[k].d,n=roots(j,p),g=new THREE.Group();
 const P={enamel:[],dentin:[],pulp:[],canal:[],cem:[],pdl:[],bone:[],nerve:[],vessel:[]};
-const add=(key,geo,m,x=0,y=0,z=0,sz=1)=>{const o=new THREE.Mesh(geo,m);o.position.set(x,y,z);o.scale.z=sz;g.add(o);P[key].push(o);return o};
+const add=(key,geo,m,x=0,y=0,z=0,sz=1,par=g)=>{const o=new THREE.Mesh(geo,m);o.position.set(x,y,z);o.scale.z=sz;par.add(o);P[key].push(o);return o};
 const PR={i:[[.6,0],[.9,.22],[1,.5],[.96,.85],[.88,1],[0,1]],c:[[.6,0],[.9,.22],[1,.45],[.82,.8],[.42,1.1],[0,1.22]],p:[[.6,0],[.9,.2],[1,.45],[.95,.8],[.72,1],[0,.96]],m:[[.6,0],[.92,.2],[1,.5],[.95,.82],[.8,.98],[0,.9]]}[k];
 const lat=(s,dp)=>{const pts=new THREE.SplineCurve(PR.map(a=>new THREE.Vector2(a[0]*D.w*s,a[1]*D.h*(s>.9?1:s*.9+.08)))).getPoints(20).map(v=>new THREE.Vector2(Math.max(v.x,0),v.y));const geo=new THREE.LatheGeometry(pts,32);{const q=geo.attributes.position;for(let i=0;i<q.count;i++){const x=q.getX(i),z=q.getZ(i),r=Math.hypot(x,z),t=Math.atan2(z,x),c=Math.cos(t),s2=Math.sin(t);q.setX(i,r*Math.sign(c)*Math.pow(Math.abs(c),.6));q.setZ(i,r*Math.sign(s2)*Math.pow(Math.abs(s2),.6))}}
 if(dp){const ps=geo.attributes.position,a=D.h*.14;for(let i=0;i<ps.count;i++){const x=ps.getX(i),z=ps.getZ(i),y=ps.getY(i),r=Math.hypot(x,z)/D.w,t=Math.atan2(z,x),w=Math.max(0,y/D.h-.6)/.4;ps.setY(i,y+(k=='m'?-Math.cos(4*t):k=='p'?-Math.cos(2*t):0)*a*w*r)}}geo.computeVertexNormals();return geo};
-const em=M.enamel.clone();const e=add('enamel',lat(1,true),em,0,0,0,D.z);e.userData.f=f;e.castShadow=e.receiveShadow=true;const ol=new THREE.Mesh(e.geometry,new THREE.MeshBasicMaterial({color:0x00c8e8,side:THREE.BackSide,clippingPlanes:[CP]}));ol.scale.set(1.17,1.1,D.z*1.17);ol.visible=false;g.add(ol);
+const em=M.enamel.clone();const e=add('enamel',lat(1,true),em,0,0,0,D.z);e.userData.f=f;e.castShadow=e.receiveShadow=true;const ol=new THREE.Mesh(e.geometry,new THREE.MeshBasicMaterial({color:0x00c8e8,side:THREE.BackSide,clippingPlanes:[CP]}));ol.scale.set(1.12,1.07,D.z*1.12);ol.visible=false;g.add(ol);const fl=new THREE.Mesh(e.geometry,new THREE.MeshBasicMaterial({color:0x00c8e8,transparent:true,opacity:.5,depthWrite:false,clippingPlanes:[CP]}));fl.scale.set(1.025,1.015,D.z*1.025);fl.visible=false;g.add(fl);
 add('dentin',lat(.78),M.dentin,0,0,0,D.z);add('pulp',lat(.58),M.pulp,0,.05,0,D.z);
-const off=n==1?[[0,0,0]]:n==2?[[-.5,0,-.13],[.5,0,.13]]:[[-.55,0,-.15],[.55,0,.15],[0,.5,0]],rr=n==1?D.w*.5:D.w*.33,rl=D.rl,rz=k=='i'?.85:1;
-off.forEach(([ox,oz,a])=>{const rg=new THREE.Group();rg.position.set(ox*D.w,0,oz*D.w);rg.rotation.z=a;g.add(rg);
+const off=n==1?[[0,0,0]]:n==2?(p<=5?[[0,.3,0,-.12],[0,-.3,0,.12]]:[[-.5,0,-.13],[.5,0,.13]]):[[-.55,.2,-.15],[.55,.2,.15],[0,-.5,0]],rr=n==1?D.w*.5:D.w*.33,rl=D.rl,rz=k=='i'?.85:1;
+off.forEach(([ox,oz,a,b])=>{const rg=new THREE.Group();rg.position.set(ox*D.w,0,oz*D.w);rg.rotation.z=a;rg.rotation.x=b||0;g.add(rg);
 const A=(key,geo,m,y,sz)=>add(key,geo,m,0,y,0,sz||rz,rg),tb=(key,m,x,y0,y1,r)=>add(key,new THREE.CylinderGeometry(r,r,y0-y1,6),m,x,(y0+y1)/2,0,1,rg);
 A('cem',new THREE.CylinderGeometry(rr,rr*.14,rl,18),M.cem,-rl/2).userData.r=1;A('dentin',new THREE.CylinderGeometry(rr*.84,rr*.1,rl*.98,16),M.dentin,-rl/2).userData.r=1;
 A('canal',new THREE.CylinderGeometry(rr*.36,rr*.1,rl*.96,10),M.canal,-rl/2,1);
@@ -109,7 +108,7 @@ A('pdl',new THREE.CylinderGeometry(rr*1.5,rr*.45,rl*.92,16),M.pdl,-rl*.46);
 tb('nerve',M.nerve,0,.1,-rl-1.2,.05);tb('vessel',M.art,-.06,-rl*.7,-rl-1.2,.04);tb('vessel',M.vein,.06,-rl*.7,-rl-1.2,.04)});
 add('bone',new THREE.CylinderGeometry(D.w*1.9,D.w*1.6,rl*1.25,28,1,true),M.bone,0,-rl*.62,0,D.z>.7?1:1.5);
 const up=j=='u';g.scale.y=up?-1:1;g.rotation.y=0;
-return{f,j,sd,p,k,n,D,g,P,ol,w:D.w*2.1}}
+return{f,j,sd,p,k,n,D,g,P,ol,fl,w:D.w*2.1}}
 function init(){try{R=new THREE.WebGLRenderer({canvas:$('#c'),antialias:true,alpha:true});}catch(x){gl=false;$('#nogl').style.display='block';return}
 R.localClippingEnabled=true;R.outputEncoding=THREE.sRGBEncoding;R.toneMapping=THREE.ACESFilmicToneMapping;R.toneMappingExposure=1;R.shadowMap.enabled=true;R.shadowMap.type=THREE.PCFSoftShadowMap;R.setPixelRatio(Math.min(devicePixelRatio,2));
 S=new THREE.Scene();C=new THREE.PerspectiveCamera(38,1,.1,100);C.position.set(0,1.5,15);
@@ -136,11 +135,11 @@ function view(n){if(!gl)return;const V3=THREE.Vector3,m={front:[0,1.2,15],side:[
 function focus(){if(!gl)return;const t=T[sel],V3=THREE.Vector3,wp=new V3();t.g.getWorldPosition(wp);const tg=new V3(wp.x,iso?(t.j=='u'?1:-1)*(t.D.h+t.D.rl+.9)/2:0,wp.z);
 const out=new V3(0,0,1).applyQuaternion(t.g.quaternion);tw={t:tg,p:tg.clone().addScaledVector(out,iso?9.5:12).add(new V3(0,.4,0))};CT.minDistance=2.5}
 function upd(){if(!gl)return;const tr=mode=='int';
-Object.values(T).forEach(t=>{const vis=(jaw=='all'||jaw==t.j)&&(!iso||t===T[sel]),s=t===T[sel];t.g.visible=vis;t.ol.visible=vis&&s&&mode=='ext';
+Object.values(T).forEach(t=>{const vis=(jaw=='all'||jaw==t.j)&&(!iso||t===T[sel]),s=t===T[sel];t.g.visible=vis;t.ol.visible=vis&&s&&mode=='ext';t.fl.visible=vis&&s&&mode=='ext';
 const inner=s&&mode!='ext'||s&&!L.enamel;
 for(const k in t.P)t.P[k].forEach(m=>{m.visible=L[k]&&!m.userData.hide&&(((k=='enamel'||k=='dentin')&&!m.userData.r)||(s&&mode!='ext'))});
 t.P.enamel[0].material.transparent=tr&&s;t.P.enamel[0].material.opacity=tr&&s?.12:1;t.P.enamel[0].material.depthWrite=!(tr&&s);
-const em=t.P.enamel[0].material;if(s&&mode=='cut'){em.color.setHex(0xf4e0b8);em.emissive.copy(em.color).multiplyScalar(.6)}else{em.color.setHex(s&&mode=='ext'?0x8fe4f2:0xf4e0b8);em.emissive.setHex(s?(mode=='ext'?0x0f7f99:0):t.f===hov?0x1a4650:t.hl?0x1f3a73:0)}});
+const em=t.P.enamel[0].material;if(s&&mode=='cut'){em.color.setHex(0xf4e0b8);em.emissive.copy(em.color).multiplyScalar(.6)}else{em.color.setHex(0xf4e0b8);em.emissive.setHex(s?(mode=='ext'?0x0a4a5c:0):t.f===hov?0x1a4650:t.hl?0x1f3a73:0)}});
 M.dentin.transparent=tr;M.dentin.opacity=tr?.28:1;M.dentin.depthWrite=!tr;[M.dentin,M.pulp,M.canal,M.cem].forEach(m=>m.emissive.copy(m.color).multiplyScalar(mode=='cut'?.55:0));M.pdl.opacity=mode=='cut'?.85:.3;M.bone.opacity=mode=='cut'?.55:.2;
 gums.forEach(g=>g.visible=!iso&&(jaw=='all'||jaw==g.userData.j));
 document.querySelectorAll('#jaws .btn').forEach(b=>b.setAttribute('aria-pressed',b.dataset.k==jaw));
@@ -156,8 +155,7 @@ for(const k in T){const t=T[k],b=t.b,o=t.o||{},g=t.g;g.position.x+=(b.x+(o.x||0)
 if(tw){C.position.lerp(tw.p,.1);CT.target.lerp(tw.t,.1);if(C.position.distanceTo(tw.p)<.02)tw=null}
 const want=mode!='ext'&&sel?1:0;ck+=(want-ck)*.1;
 if(sel&&ck>.01){const t=T[sel],n=new THREE.Vector3(0,0,-1).applyQuaternion(t.g.quaternion);CP.normal.copy(n);CP.constant=-n.dot(t.g.position)+(1-ck)*10}else CP.constant=1e3;
-CT.update();C.updateMatrixWorld();const ts=sel&&T[sel];if(ts)ts.P.enamel[0].material.emissiveIntensity=mode=='ext'?1+.7*Math.sin(performance.now()/240):1;
-const sl=$('#sl');if(sel&&T[sel]&&(page=='atlas'||page=='tooth'||page=='pathology')){const t=T[sel],v=new THREE.Vector3(t.g.position.x,t.j=='u'?4.2:-4.2,t.g.position.z).project(C),st=sl.style,W=stage.clientWidth;if(v.z<1){st.display='block';st.left=Math.min(Math.max((v.x*.5+.5)*W,80),W-80)+'px';st.top=(-v.y*.5+.5)*stage.clientHeight+'px';st.transform=t.j=='u'?'translate(-50%,-100%)':'translate(-50%,0)';sl.textContent='FDI '+sel+' · '+nm(sel)}else st.display='none'}else sl.style.display='none';
+CT.update();C.updateMatrixWorld();const ts=sel&&T[sel];if(ts)ts.fl.material.opacity=.42+.16*Math.sin(performance.now()/260);
 R.render(S,C)}
 function name(f){const t=T[f],q=f/10|0;return`${JN[t.j]} ${q==1||q==4?'правый':'левый'} ${PN[t.p-1]}`}
 let tab='ov';
